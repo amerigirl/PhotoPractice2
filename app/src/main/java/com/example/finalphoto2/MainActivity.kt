@@ -6,14 +6,18 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
 
-    private var our_request_code: Int = 123
+    // Move launcher to class level so takePhoto() can access it
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,35 +28,24 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-    }
 
-    fun takePhoto(view: View) {
-        //start an intent to capture image
-
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-        //start the result
-
-         //check if the task can be performed or not
-        if(intent.resolveActivity(packageManager) !==null){
-            startActivityForResult(intent, our_request_code)
+        // Initialize launcher at class level
+        takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val imageView: ImageView = findViewById(R.id.image)
+                val bitmap = result.data?.extras?.get("data") as? Bitmap
+                bitmap?.let { imageView.setImageBitmap(it) } ?:
+                Toast.makeText(this, "No photo captured", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    //now onactivity
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == our_request_code && resultCode == RESULT_OK){
-
-            //if result ok and equal to request code
-
-            val imageView : ImageView = findViewById((R.id.image))
-            //start bitmap
-            val bitmap = data?.extras?.get("data") as Bitmap
-            //set image bitmap
-            imageView.setImageBitmap(bitmap)
-
+    fun takePhoto(view: View) {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(packageManager) != null) {
+            takePictureLauncher.launch(intent)
+        } else {
+            Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show()
         }
     }
 }
