@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:padding="16dp"
     tools:context=".MainActivity">
-
 
     <ImageView
         android:id="@+id/image"
@@ -18,11 +18,39 @@
         android:scaleType="centerCrop"
         android:src="@drawable/learn" />
 
+    <!-- ORIGINAL TAKE PHOTO BUTTON -->
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="takePhoto"
         android:text="Take Photo" />
+
+    <!-- NEW BUTTON #2: Print Database Table -->
+    <Button
+        android:id="@+id/printBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="myPrintTable"
+        android:text="Print Table" />
+
+    <!-- NEW: Tag Input + Search -->
+    <EditText
+        android:id="@+id/tagInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Enter tag (selfie, 2025)"
+        android:inputType="text" />
+
+    <!-- NEW BUTTON #4: Search by Tag -->
+    <Button
+        android:id="@+id/searchBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="searchByTag"
+        android:text="Search Tag" />
 
 </LinearLayout>
