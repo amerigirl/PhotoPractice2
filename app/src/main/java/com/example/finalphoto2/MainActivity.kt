@@ -93,8 +93,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "Photo saved with tags!", Toast.LENGTH_SHORT).show()
         }
     }
-
-    //Search by tag
+//search tag
     fun searchByTag(view: View) {
         val tagInput = findViewById<EditText>(R.id.tagInput).text.toString()
         if (tagInput.isEmpty()) {
@@ -103,9 +102,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            val results = db.photoDao().searchByTag(tagInput)
-            Log.d("SEARCH", "Photos with tag '$tagInput': ${results.size}")
-            Toast.makeText(this@MainActivity, "Found ${results.size} photos", Toast.LENGTH_SHORT).show()
+            val count = db.photoDao().searchByTag(tagInput)
+            Log.d("SEARCH", "Photos with tag '$tagInput': $count")
+            Toast.makeText(this@MainActivity, "Found $count photos", Toast.LENGTH_SHORT).show()
         }
     }
+
 }
